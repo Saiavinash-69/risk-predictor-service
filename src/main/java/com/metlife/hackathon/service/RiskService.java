@@ -23,7 +23,7 @@ public class RiskService {
 
 	public Mono<RiskAnalysisResponse> analyzeRiskStream(RiskRequest model) {
 		return webClient.post()
-		                .uri("/predict")
+		                .uri("/api/predict")
 		                .bodyValue(model)
 		                .retrieve()
 		                .bodyToMono(RiskAnalysisResponse.class)
