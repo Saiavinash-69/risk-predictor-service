@@ -4,5 +4,4 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface RiskRepository extends MongoRepository<RiskRecord, String> {
-	List<RiskRecord> findByUserId(String userId);
 }

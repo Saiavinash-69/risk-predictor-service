@@ -1,17 +1,20 @@
 package com.metlife.hackathon.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.metlife.hackathon.model.RiskAnalysisResponse;
 import com.metlife.hackathon.model.RiskRequest;
-import com.metlife.hackathon.model.RiskResponse;
 import com.metlife.hackathon.service.RiskService;
 
+import reactor.core.publisher.Mono;
+
 @RestController
-@RequestMapping("/api/risk")
+@RequestMapping("/risk")
 public class RiskController {
 
 	private final RiskService riskService;
@@ -20,9 +23,9 @@ public class RiskController {
 		this.riskService = riskService;
 	}
 
-	@PostMapping("/predict")
-	public ResponseEntity<RiskResponse> predictRisk(@RequestBody RiskRequest request) {
-		RiskResponse response = riskService.analyzeRisk(request);
-		return ResponseEntity.ok(response);
+	@PostMapping(value = "/predict", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Mono<ResponseEntity<RiskAnalysisResponse>> predictRisk(@RequestBody RiskRequest request) {
+		return riskService.analyzeRiskStream(request)
+		                  .map(ResponseEntity::ok);
 	}
 }

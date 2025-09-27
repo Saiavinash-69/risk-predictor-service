@@ -1,14 +1,22 @@
 package com.metlife.hackathon.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RiskRequest {
-    private String userId;
-    private Integer age;
-    private Double bmi;
-    private Double bloodPressure;
-    private Double cholesterol;
+    private String sex;
+	private String mobile;
+	private String email;
+    private double cholesterol;
+    private double ldl;
+    private double hdl;
+    private double systolicBloodPressure;
+    private double diastolicBloodPressure;
+    private boolean smoking;
+    private boolean diabetes;
+    private boolean historyOfHeartStroke;
 }
