@@ -10,4 +10,11 @@ public class MLPrediction {
     private boolean isHighRisk;
     private double modelAccuracy;
     private double riskProbability;
+
+	public MLPrediction(String illness, boolean isHighRisk, double modelAccuracy, double riskProbability) {
+		this.illness = illness;
+		this.isHighRisk = isHighRisk;
+		this.modelAccuracy = modelAccuracy;
+		this.riskProbability = riskProbability;
+	}
 }
