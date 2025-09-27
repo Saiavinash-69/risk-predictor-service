@@ -1,41 +1,28 @@
 package com.metlife.hackathon.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import com.metlife.hackathon.model.RiskRequest;
+import com.metlife.hackathon.model.RiskResponse;
+import com.metlife.hackathon.service.RiskService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/risk")
 public class RiskController {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final SModeltring PYTHON_MODEL_URL = "http://localhost:5000/predict";
-    private final String WEBHOOK_URL = "http://localhost:8081/webhook"; // Example
+	private final RiskService riskService;
 
-    @PostMapping("/predict-heart-disease")
-    public ResponseEntity<Map<String, Object>> predictHeartDisease(@RequestBody PatientData patientData) {
+	public RiskController(RiskService riskService) {
+		this.riskService = riskService;
+	}
 
-        // Call Python Model
-        ResponseEntity<Map> response = restTemplate.postForEntity(
-                PYTHON_MODEL_URL,
-                patientData,
-                Map.class
-        );
-
-        Double probability = (Double) response.getBody().get("probability");
-
-        // Async webhook trigger
-        CompletableFuture.runAsync(() -> {
-            Map<String, Object> webhookPayload = new HashMap<>();
-            webhookPayload.put("patient", patientData);
-            webhookPayload.put("probability", probability);
-
-            restTemplate.postForEntity(WEBHOOK_URL, webhookPayload, Void.class);
-        });
-
-        // Return result to client
-        Map<String, Object> result = new HashMap<>();
-        result.put("probability", probability);
-        return ResponseEntity.ok(result);
-    }
+	@PostMapping("/predict")
+	public ResponseEntity<RiskResponse> predictRisk(@RequestBody RiskRequest request) {
+		RiskResponse response = riskService.analyzeRisk(request);
+		return ResponseEntity.ok(response);
+	}
 }
